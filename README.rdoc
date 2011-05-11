@@ -1,0 +1,107 @@
+= UseDb
+
+A multi-database connection scheme for Rails 3, supporting testing and migrations
+
+== Features
+
+=== Easy to use
+1. Bundle the gem
+2. Define a second set of databases in your database.yml file.  Use a prefix to differentiate from the core database.
+3. Add "use_db :prefix => 'your_other_database_prefix_" to the Model
+
+== Supported versions
+
+* Ruby 1.9.2
+
+* Rails 3.0.x
+
+== Install
+
+Put this line in your Gemfile:
+  gem 'use_db'
+
+Then bundle:
+  % bundle
+
+== Usage
+
+=== ACTIVERECORD
+
+Insert a reference to use_db in your model, with a :prefix and/or :suffix
+
+  class MyModel < ActiveRecord::Base
+    use_db :prefix => "your_other_database_prefix_", :suffix => "_is_legacy"
+  end
+
+This maps to a database in database.yml named:
+  your_other_database_prefix_[::Rails.env]_is_legacy
+
+So this is what your database.yml should look like:
+
+  your_other_database_prefix_test_is_legacy
+    adapter: mysql
+    database: other_test_db
+    ...
+  your_other_database_prefix_development_is_legacy
+    adapter: mysql
+    database: other_dev_db
+    ...
+
+You may find it useful (and more DRY) to define an abstract model to inherit from to avoid littering use_db in multiple places:
+
+  class LegacyDataBase < ActiveRecord::Base
+    use_db :prefix => "your_other_database_prefix_", :suffix => "_is_legacy"
+    self.abstract_class = true
+  end
+
+  class MyModel < LegacyDataBase
+  end
+
+=== MIGRATIONS
+
+Each migration intended for a different database needs to be told which to use.  Do this by adding a method "self.database_model" and returning the class name which defines the other database.  If you don't, it defaults to the core database like normal.
+
+class ChangeOtherDatabaseTable < ActiveRecord::Migration
+
+  # For clarity leave me at the top of the class.
+  def self.database_model
+    # Examples depending if you're using an abstract class or not:
+    # return "LegacyDataBase"
+    # return "MyModel"
+  end
+
+end
+
+=== TESTING
+
+In order to test multiple databases, you must invoke a task which clones the development database
+structure and copies it into the test database, clearing out the existing test data.  There is a single
+helper method which executes this task and you invoke it as follows:
+
+UseDbTestSetup.prepare_test_db(:prefix => "your_other_database_prefix_", :suffix => "_is_legacy")
+
+Even though it might not be the best place for it, I put this in my test_helper.
+You don't want it to execute for every test, so put something like this around it:
+
+unless defined?(CLONED_OTHER_DB_FOR_TESTING)
+  UseDbTestSetup.prepare_test_db(:prefix => "your_other_database_prefix_", :suffix => "_is_legacy")
+  CLONED_OTHER_DB_FOR_TESTING = true
+end
+
+=== DEBUGGING
+
+Add this statement in your test_helper or whereever you like such things.
+
+  UseDb.debug_print = true
+
+=== FIXTURES
+
+Nope. I don't use them and you probably shouldn't either, so this gem doesn't support them.  See factory_girl.
+
+== Giving Back
+
+Have a change or improvement?  Fork it, fix it, then send a pull request.
+
+== Credits
+
+David Stevenson (ds@elctech.com) originally wrote the code for this as a plugin for Rails 2. I wanted it to be a gem for Rails 3, so that's what I did. I renamed a few things here and there, added some additional debugging statements, but it's largely what he wrote.  Thanks David.

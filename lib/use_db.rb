@@ -1,5 +1,5 @@
-module UseDbPlugin
-  # options can have one or the other of the following options:
+module UseDb
+  # Options (recommended to use one or both):
   #   :prefix - Specify the prefix to append to ::Rails.env when finding the adapter specification in database.yml
   #   :suffix - Just like :prefix, only concatentated to the end
   # OR
@@ -7,11 +7,7 @@ module UseDbPlugin
   #   :host
   #   :username
   #   :password
-  #     ... etc ... same as the options in establish_connection
-  #
-  # Set the following to true in your test environment
-  # to enable extended debugging printing during testing ...
-  #   UseDbPlugin.debug_print = true
+  #   ... etc ... same as the options in establish_connection
 
   @@use_dbs = [ActiveRecord::Base]
   @@debug_print = false
@@ -19,7 +15,7 @@ module UseDbPlugin
   def use_db(options)
     options_dup = options.dup
     conn_spec = get_use_db_conn_spec(options)
-    puts "Establishing connecting on behalf of #{self.to_s} to #{conn_spec.inspect}" if UseDbPlugin.debug_print
+    puts "Establishing connecting on behalf of #{self.to_s} to #{conn_spec.inspect}" if UseDb.debug_print
     establish_connection(conn_spec)
     extend ClassMixin
     @@use_dbs << self unless @@use_dbs.include?(self) || self.to_s.starts_with?("TestModel")
@@ -45,7 +41,7 @@ module UseDbPlugin
 
   def get_use_db_conn_spec(options)
     options.symbolize_keys
-    puts "get_use_db_conn_spec OPTIONS=#{options.inspect}" if UseDbPlugin.debug_print
+    puts "get_use_db_conn_spec OPTIONS=#{options.inspect}" if UseDb.debug_print
     suffix = options.delete(:suffix)
     prefix = options.delete(:prefix)
     rails_env = options.delete(:rails_env) || ::Rails.env
@@ -53,15 +49,15 @@ module UseDbPlugin
       return options
     else
       str = "#{prefix}#{rails_env}#{suffix}"
-      puts "get_use_db_conn_spec STR=#{str.inspect}" if UseDbPlugin.debug_print
+      puts "get_use_db_conn_spec STR=#{str.inspect}" if UseDb.debug_print
       connections = YAML.load(ERB.new(IO.read("#{::Rails.root.to_s}/config/database.yml"), nil, nil, '_use_db_erbout').result)
-      puts "get_use_db_conn_spec CONNECTIONS read. need connections[str]! #{connections.inspect}" if UseDbPlugin.debug_print
+      puts "get_use_db_conn_spec CONNECTIONS read. need connections[str]! #{connections.inspect}" if UseDb.debug_print
       raise "Cannot find database specification.  Configuration '#{str}' expected in config/database.yml" if (connections[str].nil?)
       return connections[str]
     end
   end
 end
 
-class UseDbPluginClass
-  extend UseDbPlugin
-end
+ActiveRecord::Base.extend UseDb
+
+require 'use_db_test_setup'
