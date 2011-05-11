@@ -7,12 +7,12 @@ Gem::Specification.new do |s|
   s.version     = UseDb::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Ron Guarisco"]
-  s.email       = ["ron@birdietracker.com"]
+  s.email       = ["ron@guarisco.net"]
   s.homepage    = "http://www.birdietracker.com"
   s.summary     = %q{Multi-database AR connections for Rails 3}
   s.description = %q{Multi-database AR connections for Rails 3 models, tests, and migrations.}
 
-  # s.rubyforge_project = "use_db"  # we use github!
+  s.rubyforge_project = "use_db"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
