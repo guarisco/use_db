@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Ron Guarisco"]
   s.email       = ["ron@guarisco.net"]
-  s.homepage    = "http://www.birdietracker.com"
+  s.homepage    = "https://github.com/guarisco/use_db"
   s.summary     = %q{Multi-database AR connections for Rails 3}
   s.description = %q{Multi-database AR connections for Rails 3 models, tests, and migrations.}
 
