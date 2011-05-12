@@ -61,32 +61,31 @@ You may find it useful (and more DRY) to define an abstract model to inherit fro
 
 Each migration intended for a different database needs to be told which to use.  Do this by adding a method "self.database_model" and returning the class name which defines the other database.  If you don't, it defaults to the core database like normal.
 
-class ChangeOtherDatabaseTable < ActiveRecord::Migration
-
-  # For clarity leave me at the top of the class.
-  def self.database_model
-    # Examples depending if you're using an abstract class or not:
-    # return "LegacyDataBase"
-    # return "MyModel"
+  class ChangeOtherDatabaseTable < ActiveRecord::Migration
+    # For clarity leave me at the top of the class.
+    def self.database_model
+      # Examples depending if you're using an abstract class or not:
+      # return "LegacyDataBase"
+      # return "MyModel"
+    end
   end
-
-end
 
 === TESTING
 
-In order to test multiple databases, you must invoke a task which clones the development database
-structure and copies it into the test database, clearing out the existing test data.  There is a single
-helper method which executes this task and you invoke it as follows:
+In order to test multiple databases, you must require the test setup class and invoke a task which clones
+the development database structure and copies it into the test database, clearing out the existing test data.
+There is a single helper method which executes this task and you invoke it as follows:
 
-UseDbTestSetup.prepare_test_db(:prefix => "your_other_database_prefix_", :suffix => "_is_legacy")
+  require 'use_db_test_setup'
+  UseDbTestSetup.prepare_test_db(:prefix => "your_other_database_prefix_", :suffix => "_is_legacy")
 
 Even though it might not be the best place for it, I put this in my test_helper.
 You don't want it to execute for every test, so put something like this around it:
 
-unless defined?(CLONED_OTHER_DB_FOR_TESTING)
-  UseDbTestSetup.prepare_test_db(:prefix => "your_other_database_prefix_", :suffix => "_is_legacy")
-  CLONED_OTHER_DB_FOR_TESTING = true
-end
+  unless defined?(CLONED_OTHER_DB_FOR_TESTING)
+    UseDbTestSetup.prepare_test_db(:prefix => "your_other_database_prefix_", :suffix => "_is_legacy")
+    CLONED_OTHER_DB_FOR_TESTING = true
+  end
 
 === DEBUGGING
 

@@ -60,4 +60,4 @@ end
 
 ActiveRecord::Base.extend UseDb
 
-require 'use_db_test_setup'
+# require 'use_db_test_setup'

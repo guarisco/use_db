@@ -1,4 +1,4 @@
-require "use_db.rb"
+# require "use_db.rb"
 require "test_model.rb"
 
 class UseDbTestSetup
