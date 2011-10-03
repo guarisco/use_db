@@ -27,7 +27,7 @@ class UseDbTestSetup
     puts "Dumping DB structure #{test_class.inspect}..." if UseDb.debug_print
 
     case conn_spec["adapter"]
-      when "mysql", "oci", "oracle"
+      when "mysql", "mysql2", "oci", "oracle"
         test_class.establish_connection(conn_spec)
         File.open("#{::Rails.root.to_s}/db/#{::Rails.env}_structure.sql", "w+") { |f| f << test_class.connection.structure_dump }
 =begin      when "postgresql"
@@ -70,7 +70,7 @@ class UseDbTestSetup
     puts "Cloning DB structure #{test_class.inspect}..." if UseDb.debug_print
 
     case conn_spec["adapter"]
-      when "mysql"
+      when "mysql", "mysql2"
         test_class.connection.execute('SET foreign_key_checks = 0')
         IO.readlines("#{::Rails.root.to_s}/db/#{::Rails.env}_structure.sql").join.split("\n\n").each do |table|
           test_class.connection.execute(table)
@@ -109,7 +109,7 @@ class UseDbTestSetup
     test_class = setup_test_model(options[:prefix], options[:suffix], "ForPurge")
 
     case conn_spec["adapter"]
-      when "mysql"
+      when "mysql", "mysql2"
         test_class.connection.recreate_database(conn_spec["database"])
       when "oci", "oracle"
         test_class.connection.structure_drop.split(";\n\n").each do |ddl|
