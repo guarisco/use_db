@@ -21,14 +21,6 @@ A multi-database connection scheme for Rails 3, supporting testing and migration
 
 * gem "use_db", "~> 0.2.0"
 
-== Install
-
-Put this line in your Gemfile:
-  gem 'use_db'
-
-Then bundle:
-  % bundle
-
 == Usage
 
 === ACTIVERECORD
