@@ -11,9 +11,15 @@ A multi-database connection scheme for Rails 3, supporting testing and migration
 
 == Supported versions
 
-* Ruby 1.9.2
+=== Ruby 1.9.2
 
-* Rails 3.0.x
+=== Rails 3.0
+
+* gem "use_db", "~> 0.1.4"
+
+=== Rails 3.1
+
+* gem "use_db", "~> 0.2.0"
 
 == Install
 
