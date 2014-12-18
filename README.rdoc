@@ -21,6 +21,10 @@ A multi-database connection scheme for Rails 3, supporting testing and migration
 
 * gem "use_db", "~> 0.2.0"
 
+=== Rails 4.x
+
+* gem "use_db", "~> 0.3.0"
+
 == Usage
 
 === ACTIVERECORD

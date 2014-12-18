@@ -6,13 +6,12 @@ module ActiveRecord
       end
     end
 
-    # New for Rails 3.1
     def method_missing(method, *arguments, &block)
       arg_list = arguments.map{ |a| a.inspect } * ', '
 
       say_with_time "#{method}(#{arg_list})" do
         unless arguments.empty? || method == :execute
-          arguments[0] = Migrator.proper_table_name(arguments.first)
+          arguments[0] = proper_table_name(arguments.first)
         end
         return super unless connection.respond_to?(method)
 
