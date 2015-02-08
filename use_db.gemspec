@@ -7,10 +7,10 @@ Gem::Specification.new do |s|
   s.version     = UseDb::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Ron Guarisco"]
-  s.email       = ["ron@guarisco.net"]
+  s.email       = ["ron.guarisco@gmail.com"]
   s.homepage    = "https://github.com/guarisco/use_db"
-  s.summary     = %q{Multi-database AR connections for Rails 3}
-  s.description = %q{Multi-database AR connections for Rails 3 models, tests, and migrations.}
+  s.summary     = %q{Multi-database AR connections for Rails 3,4}
+  s.description = %q{Multi-database AR connections for Rails 3,4 models, tests, and migrations.}
 
   s.rubyforge_project = "use_db"
 
